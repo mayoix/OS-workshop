@@ -1,5 +1,9 @@
 # OS Workshop
 
+**[Launch the online workshop →](https://mayoix.github.io/OS-workshop/)**
+
+Runs in your browser. No installation required.
+
 An interactive, software-only operating systems workshop. Students write small Python rules, observe their effects and assemble a runnable browser teaching OS.
 
 ## Run
