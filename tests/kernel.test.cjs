@@ -1,0 +1,2 @@
+require('./python.test.cjs');
+
