@@ -20,7 +20,7 @@
   hooks=options;
   $('checkpoint').onclick=()=>open();$('summary-checkpoint').onclick=()=>open();
   $('close-tutor').onclick=()=>$('tutor-dialog').close();
-  $('checkpoint-form').onsubmit=e=>{e.preventDefault();const record={prediction:$('prediction').value.trim(),observation:$('observation').value.trim(),question:$('tutor-question').value.trim()};if(Object.values(record).some(v=>!v)){ $('checkpoint-status').textContent='Add your prediction, one observation and a question first.';return;}hooks.save(record);$('checkpoint-status').textContent='Discussion card saved on this browser. Show it to your tutor; it has not been sent or reviewed automatically.';renderCard(record);};
+  $('checkpoint-form').onsubmit=e=>{e.preventDefault();const record={prediction:$('prediction').value.trim(),observation:$('observation').value.trim(),question:$('tutor-question').value.trim(),answer:$('discussion-answer').value.trim()};if([record.prediction,record.observation,record.question].some(v=>!v)){ $('checkpoint-status').textContent='Add your prediction, one observation and a question first.';return;}hooks.save(record);$('checkpoint-status').textContent='Discussion card saved on this browser. Show it to your tutor; it has not been sent or reviewed automatically.';renderCard(record);};
   $('reference-task').innerHTML=hooks.lessons.map((t,i)=>`<option value="${i}">Task ${String(i).padStart(2,'0')} — ${t.nav}</option>`).join('');
   $('reference-task').onchange=resetReference;
   $('tutor-discussed').onchange=()=>{$('show-reference').disabled=!$('tutor-discussed').checked;if(!$('tutor-discussed').checked)$('tutor-reference').hidden=true;};
@@ -29,10 +29,10 @@
  function thinkingPrompt(id){return prompts[id][0]+' '+prompts[id][1];}
  function resetReference(){$('tutor-discussed').checked=false;$('show-reference').disabled=true;$('tutor-reference').hidden=true;}
  function prepareFacilitator(id){$('reference-task').value=String(id);resetReference();}
- function renderCard(record){const state=hooks.read();$('discussion-card').textContent=`Task ${String(state.task).padStart(2,'0')} / ${hooks.lessons[state.task].nav}\n\nPREDICTION\n${record.prediction}\n\nOBSERVATION\n${record.observation}\n\nQUESTION FOR MY TUTOR\n${record.question}\n\nMY CURRENT PATCH\n${state.code}\n\nLATEST VISIBLE FEEDBACK\n${state.feedback}`;$('discussion-card').hidden=false;}
+ function renderCard(record){const state=hooks.read();$('discussion-card').textContent=`Task ${String(state.task).padStart(2,'0')} / ${hooks.lessons[state.task].nav}\n\nPREDICTION\n${record.prediction}\n\nOBSERVATION\n${record.observation}\n\nQUESTION FOR MY TUTOR\n${record.question}\n\nAFTER OUR DISCUSSION\n${record.answer||'Not recorded yet'}\n\nMY CURRENT PATCH\n${state.code}\n\nLATEST VISIBLE FEEDBACK\n${state.feedback}`;$('discussion-card').hidden=false;}
  function open(){const state=hooks.read(),record=state.record||{};
   $('tutor-title').textContent='Tutor checkpoint / Task '+String(state.task).padStart(2,'0');$('tutor-prompts').textContent=prompts[state.task].join('\n\n');
-  $('prediction').value=record.prediction||'';$('observation').value=record.observation||'';$('tutor-question').value=record.question||'';$('checkpoint-status').textContent='This is a conversation with your human tutor. There is no automatic answer reveal.';$('discussion-card').hidden=true;if(record.prediction)renderCard(record);$('tutor-dialog').showModal();$('prediction').focus();
+  $('discussion-answer').value=record.answer||'';$('prediction').value=record.prediction||'';$('observation').value=record.observation||'';$('tutor-question').value=record.question||'';$('checkpoint-status').textContent='This is a conversation with your human tutor. There is no automatic answer reveal.';$('discussion-card').hidden=true;if(record.prediction)renderCard(record);$('tutor-dialog').showModal();$('prediction').focus();
  }
  root.WorkshopTutor={init,thinkingPrompt,prepareFacilitator};
 })(window);
